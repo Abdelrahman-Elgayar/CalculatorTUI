@@ -1,0 +1,208 @@
+#!/bin/bash
+##################################################################################################################
+##                                                                                                              ##
+##   This simple bash script implements a TUI calculator that features some Arithmatic and Logical operations.  ##
+##                                                                                                              ##
+##################################################################################################################
+function INTRO { whiptail --title "Our TUI Calaculator" --yesno "Welcome to our TUI calculator." --yes-button "continue" --no-button "exit" \
+ 25 50  3>&1  1>&2  2>&3; EX=$?; }
+
+function MAIN_MENU { USR_CHOICE=($(whiptail --title "Welcome to our TUI calculator" --menu "How can we help you?" \
+--ok-button "continue" --cancel-button "exit" 15 100 8 \
+"Back" "Return to the main menu." \
+"Arithmetic Operations" "Do you want to perform an arithmetic operation?" \
+"Logical Operations" "Or you would prefer to try logical operations instead?" \
+"Documentations" "Hmmmmm, so you care to have a look on our documentaion?" 3>&1 1>&2 2>&3));EX=$?; }
+
+function ARITHMETIC { ARITH_CHOICE=($(whiptail --title "Arithmetic Operations" --menu "Please choose the required operation" \
+--ok-button "continue" --cancel-button "exit" 15 100 8 \
+"Back" "Return to the previous menu." \
+"Addition" "(+)" \
+"Subtraction" "(-)" \
+"Division" "(/)" \
+"Multiplication" "(*)" \
+"Modulo" "(%)" \
+"Exponentiation" "(**)" \
+"Factorial" "(!)" 3>&1 1>&2 2>&3));EX=$?;}
+
+function LOGICAL { LOG_CHOICE=($(whiptail --title "Logical Operatoins" --menu "Please choose the required operation" --ok-button "continue" \
+--cancel-button "exit" 15 100 8 \
+"Back" "Return to the previous menu." \
+"ANDing" "(&)" \
+"ORing" "(|)" \
+"Negation" "(!)" \
+"XOR" "(^)" 3>&1 1>&2 2>&3));EX=$?;}
+
+function DOCUMENTATION { whiptail --title "Credits" --msgbox "This calculator has been implemented and developed \
+under the supervision of Eng.Kareem Abdelhameed" 10 80; }
+
+
+function _ADDITION { NUM1=($(whiptail --title "First Number" --inputbox "Please enter the first number" 10 50 3>&1 1>&2 2>&3)); \
+NUM2=($(whiptail --title "Second Number" --inputbox "Please enter the second number" 10 50 3>&1 1>&2 2>&3;EX=$?)); \
+CHECK='^[+-]?[0-9]+([0-9]+)?$'
+
+if ! [[ $NUM1 =~ $CHECK && $NUM2 =~ $CHECK ]]
+then 
+whiptail --title "Invalid Input" --msgbox "The addition process only takes integral numeric arguments, Please provide valid inputs" 10 50; \
+#_ADDITION
+else
+RES=$(($NUM1+$NUM2)); \
+whiptail --title "Result" --msgbox "The result of adding ( $NUM2 ) to ( $NUM1 ) is ( $RES )" 10 80; \
+fi
+}
+
+function _SUBTRACTION { NUM1=($(whiptail --title "First Number" --inputbox "Please enter the first number" 10 50 3>&1 1>&2 2>&3)); \
+NUM2=($(whiptail --title "Second Number" --inputbox "Please enter the second number" 10 50 3>&1 1>&2 2>&3;EX=$?)); \
+CHECK='^[-+]?[0-9]+([0-9]+)?$'
+if ! [[ $NUM1 =~ $CHECK && $NUM2 =~ $CHECK ]]
+then
+whiptail --title "Invalid Input" --msgbox "The subtraction process only takes integral numeric arguments, Please provide valid inputs" 10 50; \
+#_SUBTRACTION
+else
+RES=$(($NUM1-$NUM2)); \
+whiptail --title "Result" --msgbox "The result of subtracting ( $NUM2 ) from ( $NUM1 ) is ( $RES )" 10 80; \
+fi
+}
+
+function _DIVISION { NUM1=($(whiptail --title "Dividend" --inputbox "Please enter the dividend" 10 50 3>&1 1>&2 2>&3)); \
+NUM2=($(whiptail --title "Divisor" --inputbox "Please enter the divisor" 10 50 3>&1 1>&2 2>&3;EX=$?)); \
+CHECK='^[-]?[0-9]+([0-9]+)?$'
+if ! [[ $NUM1 =~ $CHECK && $NUM2 =~ $CHECK ]]
+then 
+whiptail --title "Invalid Input" --msgbox "The division process only takes integral numeric arguments, Please provide valid inputs" 10 50; \
+#_DIVISION
+elif [[ $NUM2 = 0 ]]
+then
+whiptail --title "Division by zero" --msgbox "You know you can not divide by zero, right? Please provide a non-zero input" 10 50; \
+else
+RES=$(($NUM1/$NUM2)); \
+whiptail --title "Result" --msgbox "The quotient of dividing ( $NUM1 ) by ( $NUM2 ) is ( $RES )" 10 80; \
+fi
+}
+
+function _MULTIPLICATION { NUM1=($(whiptail --title "First Number" --inputbox "Please enter the first number" 10 50 3>&1 1>&2 2>&3)); \
+NUM2=($(whiptail --title "Second Number" --inputbox "Please enter the second number" 10 50 3>&1 1>&2 2>&3;EX=$?)); \
+CHECK='^[-]?[0-9]+([0-9]+)?$'
+if ! [[ $NUM1 =~ $CHECK && $NUM2 =~ $CHECK ]]
+then
+whiptail --title "Invalid Input" --msgbox "The multiplication process only takes integral numeric arguments, Please provide valid inputs" \
+10 50; \
+#_MULTIPLICATION
+else
+RES=$(($NUM1*$NUM2)); \
+whiptail --title "Result" --msgbox "The result of multiplying ( $NUM2 ) by ( $NUM1 ) is ( $RES )" 10 80; \
+fi
+}
+
+function _MODULO { NUM1=($(whiptail --title "Dividend" --inputbox "Please enter the dividend" 10 50 3>&1 1>&2 2>&3)); \
+NUM2=($(whiptail --title "Divisor" --inputbox "Please enter the divisor" 10 50 3>&1 1>&2 2>&3;EX=$?)); \
+CHECK='^[-]?[0-9]+([0-9]+)?$'
+if ! [[ $NUM1 =~ $CHECK && $NUM2 =~ $CHECK ]]
+then 
+whiptail --title "Invalid Input" --msgbox "The modulo process only takes integral numeric arguments, Please provide valid inputs" 10 50; \
+#_MODULO
+elif [[ $NUM2 = 0 ]]
+then
+whiptail --title "Division by zero" --msgbox "You know you can not divide by zero, right? Please provide a non-zero input" 10 50; \
+else
+RES=$(($NUM1%$NUM2)); \
+whiptail --title "Result" --msgbox "The remainder from dividing ( $NUM1 ) by ( $NUM2 ) is ( $RES )" 10 80; \
+fi
+}
+
+function _EXPONENTIATION { NUM1=($(whiptail --title "Base" --inputbox "Please enter the base number" 10 50 3>&1 1>&2 2>&3)); \
+NUM2=($(whiptail --title "Power" --inputbox "Please enter the power number" 10 50 3>&1 1>&2 2>&3;EX=$?)); \
+CHECK1='^[0-9]+([0-9]+)?$'
+CHECK2='^[-]?[0-9]+([0-9]+)?$'
+if ! [[ $NUM1 =~ $CHECK2 && $NUM2 =~ $CHECK1 ]]
+then
+whiptail --title "Invalid Input" --msgbox "The exponentiation process only takes integral numeric arguments, Please provide valid non-negative inputs" \
+10 50; \
+#_EXPONENTIATION
+else
+RES=$(($NUM1**$NUM2)); \
+whiptail --title "Result" --msgbox "The result of raising ( $NUM1 ) to the power of ( $NUM2 ) is ( $RES )" 10 80; \
+fi
+}
+
+function _FACTORIAL { NUM1=($(whiptail --title "Factorial" --inputbox "please enter the number required to calculate its factorial" \
+10 50 3>&1 1>&2 2>&3)); \
+CHECK='^[0-9]+([0-9]+)?$'
+if ! [[ $NUM1 =~ $CHECK ]]
+then
+whiptail --title "Invalid Input" --msgbox "The factorial process only takes integral numeric arguments, Please provide valid non-negative inputs" \
+10 50; \
+#_FACTORIAL
+elif [[ $NUM1 -gt 20 ]]
+then 
+whiptail --title "Very large number" --msgbox "Please provide a smaller input, our calculator is not that powerful yet!" 10 45
+else
+RES=1
+NUM2=$NUM1
+while [[ $NUM2 -gt 0 ]]; do
+RES=$(($RES*$NUM2))
+NUM2=$(($NUM2 - 1))
+done
+whiptail --title "Result" --msgbox "The factorial of ( $NUM1 ) is ( $RES )" 10 80; \
+fi
+}
+
+#function _AND {;}
+#function _OR {;}
+#function _NOT {;}
+#function _XOR {;}
+
+#MAIN_MENU
+#echo $USR_CHOICE
+
+INTRO
+#echo $?
+#echo $EX
+#echo $?
+while [[ $EX = 0 ]]
+do
+        MAIN_MENU;
+        case $USR_CHOICE in
+        Back)
+	INTRO
+        ;;
+	Arithmetic)
+        ARITHMETIC
+		case $ARITH_CHOICE in
+       		 Addition)
+       		 _ADDITION
+       		 ;;
+		 Subtraction)
+		 _SUBTRACTION
+		 ;;
+		 Division)
+		 _DIVISION
+		 ;;
+		 Multiplication)
+		 _MULTIPLICATION
+		 ;;
+		 Modulo)
+		 _MODULO
+		 ;;
+		 Exponentiation)
+		 _EXPONENTIATION
+		 ;;
+		 Factorial)
+		 _FACTORIAL
+		 ;;
+       		 esac
+        ;;
+        Logical)
+        LOGICAL
+        ;;
+	Documentations)
+        DOCUMENTATION
+        ;;
+	*)
+	echo "We wish we have served you well. exit status = $?"
+        ;;
+        esac
+if [[ $EX = 1 ]]
+then  echo "Our Calculator has been terminated. exit status = $?"
+fi
+done
